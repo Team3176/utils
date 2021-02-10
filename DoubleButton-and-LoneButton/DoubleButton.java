@@ -25,3 +25,13 @@ public class DoubleButton extends Trigger {
     return m_joystick.getRawButton(m_button1) && m_joystick.getRawButton(m_button2);
   } 
 }
+
+/* Use like below:
+ *
+ *  private Joystick joystick = new Joystick(ControllerConstants.JoystickID); 
+ *  private Button button = new DualButton(joystick, 1, 2);
+ *
+ *
+ *   button.whenPressed(new MyCommand());
+ */
+
