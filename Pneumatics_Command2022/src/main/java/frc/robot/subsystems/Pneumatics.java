@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pneumatics {
     private DoubleSolenoid piston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
-    private Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
     private static Pneumatics instance = new Pneumatics();
     private boolean pistonSetting = false;
 

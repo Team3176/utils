@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Retract;
 import frc.robot.subsystems.Pneumatics;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -21,11 +22,16 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private Pneumatics m_Pneumatics;
-
+  private Controller m_Controller;
+  private Compressor m_Compressor;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     m_Pneumatics = Pneumatics.getInstance();
+    m_Controller = Controller.getInstance();
+    m_Compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+    m_Compressor.start();
+
 
     // Configure the button bindings
     configureButtonBindings();
@@ -38,7 +44,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    m_Controller.getDuke_XButton().whenPressed(new Extend());
 
   }
 
