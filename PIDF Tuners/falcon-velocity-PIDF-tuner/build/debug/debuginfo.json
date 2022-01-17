@@ -1,0 +1,9 @@
+[
+  {
+    "artifact": "frcJava (in project falcon-velocity-PIDF-tuner)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "falcon-velocity-PIDF-tuner",
+    "language": "java"
+  }
+]
