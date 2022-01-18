@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+//import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +24,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 /**
  * This is a demo program showing the use of the RobotDrive class, specifically
@@ -31,7 +32,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
  */
 public class Robot extends TimedRobot {
   private XboxController m_xboxController = new XboxController(0);
-  private PowerDistributionPanel m_pdp = new PowerDistributionPanel();
+  // private PowerDistributionPanel m_pdp = new PowerDistributionPanel();
+  private PowerDistribution m_pdp = new PowerDistribution(0, ModuleType.kCTRE);
   private int deviceID = 1;
   //private int m_follow_deviceID = 0;    // CAN Id zero disables follow motor mode
   //private boolean m_follow_motor_inverted = true;
