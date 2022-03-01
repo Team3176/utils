@@ -11,8 +11,6 @@ import frc.robot.commands.Extend;
 import frc.robot.commands.Retract;
 import frc.robot.subsystems.Pneumatics;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
