@@ -22,6 +22,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -31,10 +32,10 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
  * it contains the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
-  private XboxController m_xboxController = new XboxController(0);
+  private XboxController m_xboxController = new XboxController(2);
   // private PowerDistributionPanel m_pdp = new PowerDistributionPanel();
   private PowerDistribution m_pdp = new PowerDistribution(0, ModuleType.kCTRE);
-  private int deviceID = 1;
+  private int deviceID = 51;
   //private int m_follow_deviceID = 0;    // CAN Id zero disables follow motor mode
   //private boolean m_follow_motor_inverted = true;
   private double m_setPoint = 0;
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
   //private CANPIDController m_pidController;
   //private CANEncoder m_encoder;
   private boolean m_invert_motor = true;
+  private boolean kInBrakeMode = false;
   private SlewRateLimiter m_rateLimiter;
   private double m_rate_RPMpersecond;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
@@ -62,10 +64,10 @@ public class Robot extends TimedRobot {
     // and *probably* too small to overdrive an untuned system.
     // PID Gains may have to be adjusted based on the responsiveness of control loop.
     // kF: 1023 represents output value to Talon at 100%, 20660 represents Velocity units at 100% output
-    kFF = 1023.0/20660.0;  
-    kP = 0.1;
-    kI = 0.001;
-    kD = 5.0;
+    kFF = 0.1;  
+    kP = 0.0;
+    kI = 0.0;
+    kD = 0.0;
     kIz = 300;
     kMaxOutput = 1.0;
     kMinOutput = -1.0;
@@ -134,6 +136,8 @@ public class Robot extends TimedRobot {
 
     // m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     
+    m_motor.setNeutralMode(NeutralMode.Coast);
+
     m_motor.setInverted(m_invert_motor);
 
     //if (m_follow_motor != null) {
@@ -253,16 +257,16 @@ public class Robot extends TimedRobot {
       // press A, B, Y, X buttons set speed
       // press Right Bumper to stop (set RPM to zero)
       if (m_xboxController.getAButtonPressed()) {
-        targetRPM = 1000;
+        targetRPM = 1500;
       }
       else if (m_xboxController.getBButtonPressed()) {
-        targetRPM = 2000;
+        targetRPM = 2500;
       }
       else if (m_xboxController.getYButtonPressed()) {
-        targetRPM = 3000;
+        targetRPM = 3500;
       }
       else if (m_xboxController.getXButtonPressed()) {
-        targetRPM = 4000;
+        targetRPM = 4500;
       }
       else if (m_xboxController.getRightBumperPressed()) {
         targetRPM = 0;
