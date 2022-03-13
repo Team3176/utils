@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   //private TalonSRX m_follow_motor = null;
   //private CANPIDController m_pidController;
   //private CANEncoder m_encoder;
-  private boolean m_invert_motor = true;
+  private boolean m_invert_motor = false;
   private SlewRateLimiter m_rateLimiter;
   private double m_rate_RPMpersecond;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
@@ -63,8 +63,8 @@ public class Robot extends TimedRobot {
     kI = 0;
     kD = 0.0;
     kIz = 0;
-    kMaxOutput = 1.0;
-    kMinOutput = -1.0;
+    kMaxOutput = .05;
+    kMinOutput = -.05;
     maxRPM = 5700;
     m_rate_RPMpersecond = 1e10;    // 10 million effectively disables rate limiting
     kSlotIdx = 0;
@@ -166,8 +166,8 @@ public class Robot extends TimedRobot {
     // Config the peak and nominal outputs
     m_motor.configNominalOutputForward(0, kTimeoutMs);
     m_motor.configNominalOutputReverse(0, kTimeoutMs);
-    m_motor.configPeakOutputForward(.7, kTimeoutMs);
-    m_motor.configPeakOutputReverse(-.7, kTimeoutMs);
+    m_motor.configPeakOutputForward(.05, kTimeoutMs);
+    m_motor.configPeakOutputReverse(-.05, kTimeoutMs);
 
     // set PID coefficients in slot0; typically kFF stays zero
     m_motor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
@@ -249,16 +249,16 @@ public class Robot extends TimedRobot {
       // press A, B, Y, X buttons set speed
       // press Right Bumper to stop (set RPM to zero)
       if (m_xboxController.getAButtonPressed()) {
-        setPoint = beginningPosition + 2048;  // 90 degrees rotation when 1 full rev = 4096 tics
+        setPoint = -1024;  // 90 degrees rotation when 1 full rev = 4096 tics
       }
       else if (m_xboxController.getBButtonPressed()) {
-        setPoint = beginningPosition - 2048; // 180 degrees rotation when 1 full rev = 4096 tics
+        setPoint = -2048; // 180 degrees rotation when 1 full rev = 4096 tics
       }
       else if (m_xboxController.getYButtonPressed()) {
-        setPoint = beginningPosition - 4096;  // 270 degrees rotation when 1 full rev = 4096 tics
+        setPoint = -3072;  // 270 degrees rotation when 1 full rev = 4096 tics
       }
       else if (m_xboxController.getXButtonPressed()) {
-        setPoint = beginningPosition + 4096;  // 360 degrees rotation when 1 full rev = 4096 tics
+        setPoint = -4096;  // 360 degrees rotation when 1 full rev = 4096 tics
       }
       else if (m_xboxController.getRightBumper()) {
         setPoint = beginningPosition;
@@ -276,7 +276,7 @@ public class Robot extends TimedRobot {
     }
 
     double rawLocation = m_motor.getSelectedSensorPosition();
-    double location = rawLocation - beginningPosition;
+    double location = rawLocation;
 
     if (m_elapsedTime_sec == 0) {
       if (Math.abs(location - m_setPoint) < 50) {
@@ -307,6 +307,9 @@ public class Robot extends TimedRobot {
 
     // limit switch checks
     // remember, limit switches are FALSE WHEN PRESSED!!!
+    
+     
+    /* 
     if (kIsAngler)
     {
       if (!limitSwitchLower.get() && error > 0) {
@@ -319,8 +322,10 @@ public class Robot extends TimedRobot {
     } else {
       m_motor.set(ControlMode.Position, reference_setpoint);
     }
+    */
+    m_motor.set(ControlMode.Position, reference_setpoint);
 
-    SmartDashboard.putNumber("SetPoint (Encoder Tics)", reference_setpoint - beginningPosition);  // was m_setpoint
+    SmartDashboard.putNumber("SetPoint (Encoder Tics)", reference_setpoint);  // was m_setpoint
     SmartDashboard.putNumber("Position (Encoder Tics)", location);
     SmartDashboard.putNumber("Time to reach Position", m_elapsedTime_sec);
     SmartDashboard.putNumber("Overshot", overshot);
@@ -328,7 +333,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Error (Position)", error);
     SmartDashboard.putNumber("Applied Output (Motor Voltage)", m_motor.getMotorOutputVoltage());
 
-    SmartDashboard.putBoolean("Limiter 1", limitSwitchLower.get());
-    SmartDashboard.putBoolean("Limiter 2", limitSwitchUpper.get());
+    SmartDashboard.putBoolean("Limiter Lower", limitSwitchLower.get());
+    SmartDashboard.putBoolean("Limiter Upper", limitSwitchUpper.get());
+
+  }
+
+  @Override
+  public void robotPeriodic() {
+    if (!limitSwitchLower.get()) {
+      m_motor.set(ControlMode.PercentOutput, 0.0);
+    }
+    if (!limitSwitchUpper.get()) {
+      m_motor.set(ControlMode.PercentOutput, 0.0);
+    }
   }
 }
