@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pneumatics extends SubsystemBase {
-    private DoubleSolenoid piston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
+    private DoubleSolenoid piston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 14);
     private static Pneumatics instance = new Pneumatics();
     private boolean pistonSetting = false;
 
     public void Extend() 
     {
-        pistonSetting = true; 
+        pistonSetting = true;
         piston.set(Value.kForward);
     }
 

@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private XboxController m_xboxController = new XboxController(2);
   // private PowerDistributionPanel m_pdp = new PowerDistributionPanel();
   private PowerDistribution m_pdp = new PowerDistribution(0, ModuleType.kCTRE);
-  private int deviceID = 51;
+  private int deviceID = 10;
   //private int m_follow_deviceID = 0;    // CAN Id zero disables follow motor mode
   //private boolean m_follow_motor_inverted = true;
   private double m_setPoint = 0;
