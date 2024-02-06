@@ -24,12 +24,12 @@ public class Constants {
   // PRESET VALUES -- [0] = index for that set of values (used for referencing the set),
   // [1] = 0 or 1 (0 = joysticks and 1 = xbox controller), [2] = deadband (decimal percent),
   // [3] = scaling constant, [4] = max percent (decimal) without turbo on, [5] = percent (decimal) per second ramp
-  public static final double[][] controllerChoices = { {0, 0,   0.10, 1.0, 0.70, 6.0}, // joystick general
-                                                        {1, 1,  0.05, 1.0, 0.70, 6.0}, // Xbox general
-                                                        {2, 0,  0.10, 1.5, 0.70, 6.0}, // joystick scaled up (L2 & R4)
-                                                        {3, 1,  0.10, 1.5, 0.70, 6.0}, // Xbox X3
-                                                        {4, 0,  0.10, 2.0, 0.75, 6.0}, // joystick hyper (L2 & R4)
-                                                        {5, 1,  0.10, 2.0, 0.75, 6.0} }; // Xbox X3 Hyper
+  public static final double[][] controllerChoices = { {0, 0,   0.20, 1.0, 0.70, 6.0}, // joystick general
+                                                        {1, 1,  0.20, 1.0, 0.70, 6.0}, // Xbox general
+                                                        {2, 0,  0.20, 1.5, 0.70, 6.0}, // joystick scaled up (L2 & R4)
+                                                        {3, 1,  0.20, 1.5, 0.70, 6.0}, // Xbox X3
+                                                        {4, 0,  0.20, 2.0, 0.75, 6.0}, // joystick hyper (L2 & R4)
+                                                        {5, 1,  0.20, 2.0, 0.75, 6.0} }; // Xbox X3 Hyper
   // To add a new preset, make the list in the format above and name it, making the value at index 0 one more than the value of
   // the most recent preset list created. Then, go to Robot.java and add presetListName[0] as a new option to controlTypeChooser
 }

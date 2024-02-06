@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
     double rightY = 0;
     double rightX = 0;
 
+    //checking which controller type is used and getting the movements
     if (m_Controller.getControllerType() == 0) {
       leftY = -m_Controller.getLeftStickY();
       rightY = -m_Controller.getRightStickY();
@@ -104,15 +105,16 @@ public class Robot extends TimedRobot {
     if (m_Drivetrain.getDriveMode().equals(Constants.d_t)) {
       m_Drivetrain.driveTank(leftY, rightY);
     } else if (m_Drivetrain.getDriveMode().equals(Constants.d_a)) {
-      m_Drivetrain.driveArcade(leftY, rightX);
+      m_Drivetrain.driveArcade(rightY, rightX);
     }
 
+    SmartDashboard.putNumber("Right Y", rightY);
     SmartDashboard.putNumber("Controller Type (#)", m_Controller.getControllerType());
     SmartDashboard.putNumber("Deadband", m_Controller.getDeadband());
     SmartDashboard.putNumber("Scale Value", m_Controller.getScalingConstant());
     SmartDashboard.putNumber("Non-Turbo Boundary", m_Drivetrain.getMaxOutputTurboOff());
     if (m_Controller.getControllerType() == 0) {
-      SmartDashboard.putBoolean("Turbo Mode", m_Controller.getLeftStickTrigger());
+      SmartDashboard.putBoolean("Turbo Mode", m_Controller.getRightStickTrigger());
     } else if (m_Controller.getControllerType() == 1) {
       SmartDashboard.putBoolean("Turbo Mode", m_Controller.getXboxLeftBumper());
     }
