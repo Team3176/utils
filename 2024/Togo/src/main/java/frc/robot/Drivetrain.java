@@ -15,82 +15,84 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 /** Add your docs here. */
 public class Drivetrain {
 
-    // private static Drivetrain m_Drivetrain = new Drivetrain();
-    private Controller m_Controller;
-    private CANSparkMax leftFrontMotor;
-    private CANSparkMax leftBackMotor;
-    private MotorControllerGroup leftMotorGroup;
-    private CANSparkMax rightFrontMotor;
-    private CANSparkMax rightBackMotor;
-    private MotorControllerGroup rightMotorGroup;
-    private DifferentialDrive robotDrive;
+  // private static Drivetrain m_Drivetrain = new Drivetrain();
+  private Controller m_Controller;
+  private CANSparkMax leftFrontMotor;
+  private CANSparkMax leftBackMotor;
+  private MotorControllerGroup leftMotorGroup;
+  private CANSparkMax rightFrontMotor;
+  private CANSparkMax rightBackMotor;
+  private MotorControllerGroup rightMotorGroup;
+  private DifferentialDrive robotDrive;
 
-    private String driveMode;
+  private String driveMode;
 
-    private double maxPercentTurboOff;
-    private SlewRateLimiter rateLimiter1;
-    private SlewRateLimiter rateLimiter2;
+  private double maxPercentTurboOff;
+  private SlewRateLimiter rateLimiter1;
+  private SlewRateLimiter rateLimiter2;
 
-    public Drivetrain()
-    {
-        leftFrontMotor = new CANSparkMax(Constants.NEO_LEFT_FRONT_CANID, MotorType.kBrushless);
-        leftBackMotor = new CANSparkMax(Constants.NEO_LEFT_BACK_CANID, MotorType.kBrushless);
-        leftMotorGroup = new MotorControllerGroup(leftFrontMotor, leftBackMotor);
-        rightFrontMotor = new CANSparkMax(Constants.NEO_RIGHT_FRONT_CANID, MotorType.kBrushless);
-        rightBackMotor = new CANSparkMax(Constants.NEO_RIGHT_BACK_CANID, MotorType.kBrushless);
-        rightMotorGroup = new MotorControllerGroup(rightFrontMotor, rightBackMotor);
-        robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
+  public Drivetrain() {
+    leftFrontMotor = new CANSparkMax(Constants.NEO_LEFT_FRONT_CANID, MotorType.kBrushless);
+    leftBackMotor = new CANSparkMax(Constants.NEO_LEFT_BACK_CANID, MotorType.kBrushless);
+    leftMotorGroup = new MotorControllerGroup(leftFrontMotor, leftBackMotor);
+    rightFrontMotor = new CANSparkMax(Constants.NEO_RIGHT_FRONT_CANID, MotorType.kBrushless);
+    rightBackMotor = new CANSparkMax(Constants.NEO_RIGHT_BACK_CANID, MotorType.kBrushless);
+    rightMotorGroup = new MotorControllerGroup(rightFrontMotor, rightBackMotor);
+    robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
-        leftMotorGroup.setInverted(true);
+    leftMotorGroup.setInverted(true);
 
-        this.driveMode = Constants.d_a;
+    this.driveMode = Constants.d_a;
 
-        this.maxPercentTurboOff = 0;
-        this.rateLimiter1 = new SlewRateLimiter(8.0);
-        this.rateLimiter2 = new SlewRateLimiter(8.0);
-    }
+    this.maxPercentTurboOff = 0;
+    this.rateLimiter1 = new SlewRateLimiter(8.0);
+    this.rateLimiter2 = new SlewRateLimiter(8.0);
+  }
 
-    public String getDriveMode() {
-      return this.driveMode;
-    }
+  public String getDriveMode() {
+    return this.driveMode;
+  }
 
-    public void setDriveMode(String newDriveMode) {
-      // stop motors on drive mode change
-      this.driveTank(0, 0);
-      this.driveMode = newDriveMode;
-    }
+  public void setDriveMode(String newDriveMode) {
+    // stop motors on drive mode change
+    this.driveTank(0, 0);
+    this.driveMode = newDriveMode;
+  }
 
-    public double getMaxOutputTurboOff() {
-      return this.maxPercentTurboOff;
-    }
+  public double getMaxOutputTurboOff() {
+    return this.maxPercentTurboOff;
+  }
 
-    public void setMaxOutputTurboOff(double newOutput) {
-      this.maxPercentTurboOff = newOutput;
-    }
-    
-    public void setRamp(double newRamp) {
-      this.rateLimiter1 = new SlewRateLimiter(newRamp);
-      this.rateLimiter2 = new SlewRateLimiter(newRamp);
-      System.out.println("New ramp: " + newRamp + " ############################");
-    }
+  public void setMaxOutputTurboOff(double newOutput) {
+    this.maxPercentTurboOff = newOutput;
+  }
 
-    /**
-   * Scales the input from the controller/joystick based on the equation being used and the scaling constant selected
+  public void setRamp(double newRamp) {
+    this.rateLimiter1 = new SlewRateLimiter(newRamp);
+    this.rateLimiter2 = new SlewRateLimiter(newRamp);
+    System.out.println("New ramp: " + newRamp + " ############################");
+  }
+
+  /**
+   * Scales the input from the controller/joystick based on the equation being
+   * used and the scaling constant selected
+   * 
    * @author Jared Brown
    * @param input
    * @return output
    */
-  public double scaleInput(double input)
-  {
+  public double scaleInput(double input) {
     // "a" is the scaling constant
 
     // - - - - -
     // Equation 1: f(x) = b(x) + a(x^3)
     // Recommended: 0 <= a <= 1
-    // double output = ((1 - Constants.kScalingConstant) * input) + (Constants.kScalingConstant * Math.pow(input, 3));
+    // double output = ((1 - Constants.kScalingConstant) * input) +
+    // (Constants.kScalingConstant * Math.pow(input, 3));
 
     // - - - - -
-    // Equation 2: f(x) = x^(1/c) ... because this function does weird stuff with negative input, it will run negative input like a
+    // Equation 2: f(x) = x^(1/c) ... because this function does weird stuff with
+    // negative input, it will run negative input like a
     // positive input and then flip it at the end
     // Recommended: 0.25 <= a <= 5 ... Valid: a > 0
     if (input >= 0) {
@@ -102,9 +104,8 @@ public class Drivetrain {
     return output;
   }
 
-  private double scaleForTurbo(double power)
-  {
-    if (((m_Controller.getControllerType() == 0) && m_Controller.getLeftStickTrigger()) || 
+  private double scaleForTurbo(double power) {
+    if (((m_Controller.getControllerType() == 0) && m_Controller.getRightStickTrigger()) ||
         ((m_Controller.getControllerType() == 1) && m_Controller.getXboxLeftBumper())) {
       return power;
     }
@@ -113,41 +114,59 @@ public class Drivetrain {
 
   /**
    * Drives with robot with tank drive.
-   * @param leftY Power on left stick
+   * 
+   * @param leftY  Power on left stick
    * @param rightY Power on right stick
    * @author Jared Brown
    */
-  public void driveTank(double leftY, double rightY)
-  {
+  public void driveTank(double leftY, double rightY) {
     leftY = this.scaleInput(leftY);
     rightY = this.scaleInput(rightY);
     leftY = this.scaleForTurbo(leftY);
     rightY = this.scaleForTurbo(rightY);
 
-    if (Math.abs(leftY) < m_Controller.getDeadband()) { leftY = 0.0;}
-    if (Math.abs(rightY) < m_Controller.getDeadband()) { rightY = 0.0;}
+    if (Math.abs(leftY) < m_Controller.getDeadband()) {
+      leftY = 0.0;
+    }
+    if (Math.abs(rightY) < m_Controller.getDeadband()) {
+      rightY = 0.0;
+    }
 
     SmartDashboard.putNumber("leftStickScaled", leftY);
     SmartDashboard.putNumber("rightStickScaled", rightY);
+
+    SmartDashboard.putNumber("leftStickLimited", this.rateLimiter1.calculate(leftY));
+    SmartDashboard.putNumber("rightStickLimited", this.rateLimiter2.calculate(rightY));
+
 
     robotDrive.tankDrive(this.rateLimiter1.calculate(leftY), this.rateLimiter2.calculate(rightY), false);
   }
 
   /**
    * Drives with robot with arcade drive.
+   * 
    * @param powerY Power on left stick
    * @param steerX Steering on right stick
    * @author Jared Brown
    */
-  public void driveArcade(double powerY, double steerX)
-  {
+  public void driveArcade(double powerY, double steerX) {
+
     powerY = this.scaleInput(powerY);
     steerX = this.scaleInput(steerX);
     powerY = this.scaleForTurbo(powerY);
 
-    if (Math.abs(powerY) < m_Controller.getDeadband()) { powerY = 0.0;}
-    if (Math.abs(steerX) < m_Controller.getDeadband()) { steerX = 0.0;}
-    if (powerY < 0) { steerX *= -1; }
+
+    if (Math.abs(powerY) < m_Controller.getDeadband()) {
+      powerY = 0.0;
+    }
+
+    if (Math.abs(steerX) < m_Controller.getDeadband()) {
+      steerX = 0.0;
+    }
+     if (powerY >= 0) {
+       steerX = steerX * -1;
+     }
+    steerX=steerX/2;
 
     SmartDashboard.putNumber("leftStickScaled", powerY);
     SmartDashboard.putNumber("rightStickScaled", steerX);
@@ -156,10 +175,10 @@ public class Drivetrain {
   }
 
   /*
-  public static Drivetrain getInstance() {
-    return m_Drivetrain;
-  }
-  */
+   * public static Drivetrain getInstance() {
+   * return m_Drivetrain;
+   * }
+   */
 
   public void setControllerReference(Controller controller) {
     this.m_Controller = controller;

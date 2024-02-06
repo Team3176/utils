@@ -31,7 +31,7 @@ public class Controller {
     this.controlChoice = 0;
 
     this.controllerType = 0;
-    this.deadband = 0.10;
+    this.deadband = 0.50;
     this.scalingConstant = 1;
   }
 
@@ -74,7 +74,7 @@ public class Controller {
   public double getXboxRightY() { return m_driverController.getRightY(); }
   public double getXboxRightX() { return m_driverController.getRightX(); }
 
-  public boolean getLeftStickTrigger() { return leftJoystick.getTrigger(); }
+  public boolean getRightStickTrigger() { return rightJoystick.getTrigger(); }
   public boolean getXboxLeftBumper() { return m_driverController.getLeftBumper(); }
 
   public double getDeadband() { return this.deadband; }
